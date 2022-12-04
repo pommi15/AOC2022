@@ -10,10 +10,10 @@ describe("day4", () => {
     });
 
     it("should do test1 correctly", async () => {
-      expect(day1.part1()).toBe(0);
+      expect(day1.part1()).toBe(2);
     });
     it("should do test1 correctly", async () => {
-      expect(day1.part2()).toBe(0);
+      expect(day1.part2()).toBe(4);
     });
   });
 
@@ -24,10 +24,10 @@ describe("day4", () => {
     });
 
     it("should do test2 correctly", async () => {
-      expect(day1.part1()).toBe(0);
+      expect(day1.part1()).toBe(1);
     });
     it("should do test2 correctly", async () => {
-      expect(day1.part2()).toBe(0);
+      expect(day1.part2()).toBe(2);
     });
   });
 
@@ -38,10 +38,10 @@ describe("day4", () => {
     });
 
     it("should do real correctly", async () => {
-      expect(day1.part1()).toBe(0);
+      expect(day1.part1()).toBe(448);
     });
     it("should do real correctly", async () => {
-      expect(day1.part2()).toBe(0);
+      expect(day1.part2()).toBe(794);
     });
   });
 });
