@@ -6,16 +6,15 @@ export class Day3 extends Day {
   }
 
   public part1(): number {
-    const samers: string[] = [];
+    const sameLetters: string[] = [];
     for (const line of this.data) {
       const [left, right] = this.getHalves(line);
-      for (let i = 0; i < left.length; i++) {
-        if (right.includes(left[i])) {
-          samers.push(left[i]);
-        }
+      const common = left.split("").find((n) => right.includes(n));
+      if (common) {
+        sameLetters.push(common);
       }
     }
-    return samers.reduce((p, c) => p + this.getCharVal(c), 0);
+    return sameLetters.reduce((p, c) => p + this.getCharVal(c), 0);
   }
   public part2(): number {
     const backPacks: string[][] = [];
@@ -26,13 +25,9 @@ export class Day3 extends Day {
       backPacks.push([left, middle, right].sort((a, b) => b.length - a.length));
     }
     return backPacks.reduce((p, c) => {
-      const [left, middle, right] = c;
-      for (let i = 0; i < left.length; i++) {
-        if (middle.includes(left[i]) && right.includes(left[i])) {
-          return p + this.getCharVal(left[i]);
-        }
-      }
-      return p;
+      const [l, m, r] = c;
+      const common = l.split("").find((n) => m.includes(n) && r.includes(n));
+      return p + (common ? this.getCharVal(common) : 0);
     }, 0);
   }
 
@@ -45,9 +40,7 @@ export class Day3 extends Day {
   private removeDoubles(str: string): string {
     return str
       .split("")
-      .filter((value, index, self) => {
-        return self.indexOf(value) === index;
-      })
+      .filter((v, i, arr) => arr.indexOf(v) === i)
       .join("");
   }
 
