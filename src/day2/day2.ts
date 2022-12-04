@@ -8,41 +8,36 @@ export class Day2 extends Day {
 
   public part1(): number {
     let sum: number = 0;
-    for (const n of this.data) {
-      const split: string[] = n.split(" ");
-      const oppo: string = split[0];
-      const me: string = split[1];
+    for (const line of this.data) {
+      const [op, me] = this.getThrows(line);
       if (me === "X") {
-        // Rock
-        sum += 1 + this.imRock(oppo);
+        sum += 1 + this.imRock(op);
       } else if (me === "Y") {
-        // Paper
-        sum += 2 + this.imPaper(oppo);
+        sum += 2 + this.imPaper(op);
       } else if (me === "Z") {
-        // Scissors
-        sum += 3 + this.imScissors(oppo);
+        sum += 3 + this.imScissors(op);
       }
     }
     return sum;
   }
   public part2(): number {
     let sum: number = 0;
-    for (const n of this.data) {
-      const split: string[] = n.split(" ");
-      const oppo: string = split[0];
-      const res: string = split[1];
-      if (oppo === "A") {
-        // Rock
+    for (const line of this.data) {
+      const [op, res] = this.getThrows(line);
+      if (op === "A") {
         sum += this.hesRock(res);
-      } else if (oppo === "B") {
-        // Paper
+      } else if (op === "B") {
         sum += this.hesPaper(res);
-      } else if (oppo === "C") {
-        // Scissors
+      } else if (op === "C") {
         sum += this.hesScissors(res);
       }
     }
     return sum;
+  }
+
+  private getThrows(line: string): string[] {
+    const split: string[] = line.split(" ");
+    return [split[0], split[1]];
   }
 
   private imRock(op: string) {
