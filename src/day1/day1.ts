@@ -1,19 +1,9 @@
 import fs from "fs";
+import { Day } from "../interfaces/day";
 
-export class Day1 {
-  private data: string[] = [];
-  constructor(private filePath: string) {}
-
-  public readData(): Promise<void> {
-    return new Promise((res, rej) => {
-      fs.readFile(this.filePath, "utf8", (err: any, d: string) => {
-        if (err) {
-          return rej(err);
-        }
-        this.data = d.split(/\r?\n/);
-        res();
-      });
-    });
+export class Day1 extends Day {
+  constructor(filePath: string) {
+    super(filePath);
   }
 
   public part1(): number {
