@@ -10,67 +10,83 @@ export class Day7 extends Day {
     return this.getFoldersOverX(tree, 100000);
   }
   public part2(): number {
-    return 0;
+    const total = 70000000;
+    const needed = 30000000;
+    const tree = this.parseTree();
+    const used = this.getNodeSize(tree);
+    const needToFree = needed - (total - used);
+    const sortedSizes = this.getListOfNodeSizes(tree).sort(
+      (a: number, b: number) => a - b
+    );
+    return sortedSizes.find((n) => n > needToFree) || 0;
   }
 
   private parseTree(): Node {
-    const nodes: any[] = [];
-    let currentFolders: string[] = [];
-    let currentFileSize: number = 0;
-    for (const line of this.data
-      .filter((n) => !n.startsWith("$ ls") && !n.startsWith("$ cd .."))
-      .reverse()) {
-      if (line.startsWith("dir")) {
-        currentFolders.push(line.split(" ")[1]);
-      } else if (line.startsWith("$")) {
-        nodes.push({
-          name: line.split(" ")[2],
-          folders: currentFolders,
-          filesSize: currentFileSize,
+    let current: Node = { name: "/", children: [], parent: null, filesSize: 0 };
+    for (const line of this.data.filter((n) => !n.startsWith("$ ls"))) {
+      if (line.startsWith("$ cd")) {
+        if (line.includes("..")) {
+          if (current.parent) {
+            current = current.parent || null;
+          }
+        } else {
+          const name = line.split(" ")[2];
+          const newNode = current.children.find((n) => n.name === name);
+          if (newNode) {
+            current = newNode;
+          }
+        }
+      } else if (line.startsWith("dir")) {
+        const name = line.split(" ")[1];
+        current.children.push({
+          name,
+          parent: current,
+          children: [],
+          filesSize: 0,
         });
-        currentFolders = [];
-        currentFileSize = 0;
       } else {
-        currentFileSize += Number(line.split(" ")[0]);
+        const fileSize = Number(line.split(" ")[0]);
+        current.filesSize += fileSize;
       }
     }
-    const root = nodes[nodes.length - 1];
-    return this.buildTree(root, nodes);
-  }
+    let tree: Node = current;
+    while (tree.parent) {
+      tree = tree.parent;
+    }
 
-  private buildTree(current: Node, nodes: any[]): Node {
-    return {
-      name: current.name,
-      filesSize: current.filesSize,
-      folders: current.folders.map((n) => {
-        const newNode = nodes.find((m) => m.name === n);
-        if (newNode) {
-          return this.buildTree(newNode, nodes);
-        }
-        return { name: "shit", filesSize: 0, folders: [] };
-      }),
-    };
+    return tree;
   }
 
   private getFoldersOverX(node: Node, x: number): number {
-    if (this.getNodeSize(node) > x) {
-      return node.folders.reduce((p, c) => p + this.getFoldersOverX(c, x), 0);
-    }
-    return (
-      this.getNodeSize(node) +
-      node.folders.reduce((p, c) => p + this.getFoldersOverX(c, x), 0)
+    return node.children.reduce(
+      (p, c): number => {
+        return p + this.getFoldersOverX(c, x);
+      },
+      this.getNodeSize(node) > x ? 0 : this.getNodeSize(node)
     );
   }
 
   private getNodeSize(node: Node): number {
-    return (
-      node.filesSize + node.folders.reduce((p, c) => p + this.getNodeSize(c), 0)
+    return node.children.reduce(
+      (p, c) => p + this.getNodeSize(c),
+      node.filesSize
     );
+  }
+
+  private getListOfNodeSizes(node: Node): number[] {
+    return [
+      this.getNodeSize(node),
+      ...node.children.reduce(
+        (p, c) => p.concat(this.getListOfNodeSizes(c)),
+        [] as number[]
+      ),
+    ];
   }
 }
 
 interface Node {
   name: string;
-  folders: Node[];
+  children: Node[];
+  parent: Node | null;
   filesSize: number;
 }

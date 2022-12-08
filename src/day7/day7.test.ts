@@ -12,9 +12,30 @@ describe("day7", () => {
     it("should do test1 correctly", async () => {
       expect(day7.part1()).toBe(95437);
     });
-    //   it("should do test1 correctly", async () => {
-    //    expect(day7.part2()).toBe(23);
-    //  });
+    it("should do test1 correctly", async () => {
+      expect(day7.part2()).toBe(24933642);
+    });
+  });
+
+  describe("test2 data", () => {
+    const day7 = new Day7(filePath + "test2.txt");
+    beforeAll((done) => {
+      day7.readData().then(() => done());
+    });
+
+    it("should do test2 correctly", async () => {
+      expect(day7.part1()).toBe(10);
+    });
+  });
+  describe("test3 data", () => {
+    const day7 = new Day7(filePath + "test3.txt");
+    beforeAll((done) => {
+      day7.readData().then(() => done());
+    });
+
+    it("should do test3 correctly", async () => {
+      expect(day7.part1()).toBe(20);
+    });
   });
 
   describe("real data", () => {
@@ -24,10 +45,10 @@ describe("day7", () => {
     });
 
     it("should do real correctly", async () => {
-      expect(day7.part1()).toBe(1034);
+      expect(day7.part1()).toBe(1348005);
     });
-    // it("should do real correctly", async () => {
-    //   expect(day7.part2()).toBe(2472);
-    // });
+    it("should do real correctly", async () => {
+      expect(day7.part2()).toBe(12785886);
+    });
   });
 });
